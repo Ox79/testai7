@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: testflo-canary
-  namespace: default
+  namespace: mt-cd78cd0c
   labels:
     app: testflo-canary
 data:

