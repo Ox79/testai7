@@ -2,6 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: testflo-rce-wft
+  annotations:
+    executables.ai.sap.com/name: testflo-rce-wft
+    executables.ai.sap.com/id: testflo-rce-wft
   labels:
     scenarios.ai.sap.com/id: testflo-scenario
     scenarios.ai.sap.com/name: testflo-scenario
